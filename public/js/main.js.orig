@@ -1,0 +1,55 @@
+$(document).ready(function() {
+  let errorForm = $('#codeforces_form_alert');
+  let successForm = $('#codeforces_form_alert2');
+  let codeforces_form_loader = $('#codeforces_form_loader');
+  let codeforces_form = $('#codeforces_form');
+  codeforces_form_loader.hide();
+  errorForm.hide();
+  successForm.hide();
+
+  // Place JavaScript code here...
+  console.log('boo boo boo');
+  $('#codeforces_form').submit(function(e) {
+    codeforces_form_loader.show();
+    codeforces_form.hide();
+    errorForm.hide();
+    //successForm.hide();
+    let username = document.getElementById('codeforces_username');
+    //console.log(username.value);
+    //let url = 'http://codeforces.com/api/user.status?handle=Fefer_Ivan&from=1&count=10'
+<<<<<<< HEAD
+    let url = 'http://codeforces.com/api/user.status?handle='+username.value;
+    //let data = this.serialize();
+    
+=======
+//    let url = 'http://codeforces.com/api/user.status?handle='+username.value;
+    let data = this.serialize();
+    console.log(data);
+>>>>>>> f20b88d3e5d23b56415ddea1f047041f303f1a5c
+    $.ajax({
+      type: 'POST',
+      url,
+      data: {
+        name: username
+      },
+      error: (msg) => {
+        errorForm.show();
+        console.log('ERROR: ', msg);
+        codeforces_form_loader.hide();
+        codeforces_form.show();
+      },
+      success: (data) => {
+        codeforces_form_loader.hide();
+        successForm.show();
+        //setTimeout(function() {
+          //successForm.hide();
+        //}, 15000);
+        data = data;
+        console.log(data.result)
+        console.log(data.result[0])
+        //console.log(data.result[0]);
+      }
+    });
+    e.preventDefault();
+  });
+});

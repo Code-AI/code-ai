@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1 Write Code Everyday!
+  p.lead Questions you should try next
+  hr
+  .row
+    .col-sm-12
+      .loader#codeforces_form_loader
+      .div.hidden#username_here #{username}
+      form.form-inline(method="POST",id="codeforces_form")
+        h4 You must enter your codeforces username to continue
+        .alert.alert-warning#codeforces_form_alert Some error occured
+        .alert.alert-success#codeforces_form_alert2 Success! You can change username from profile page
+        .form-group
+          input.form-control(name="username",type="codeforces_username",id="codeforces_username")  
+          //-.form-group
+            //-label(for="pwd") Password:
+            //-input.form-control(type="password",id="pwd")
+          button.btn.btn-default(type="submit") Submit
+        
+      div#codeforces_profile(style="margin-top: 30px")
+          .col-sm-6
+              .panel-group#accordion
+                .panel.panel-default
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion" href="#collapse1") Solved Questions (click to hide)
+                  .pane-collapse.collapse.in#collapse1
+                    .panel-body
+                        table.table.table-condensed#question_solved(style="max-height: 100px")
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion" href="#collapse2") Recommended Questions (click to hide)
+                  .pane-collapse.collapse.in#collapse2
+                    .panel-body
+                      Ipsum dolorum dolor corporis deleniti repellendus deserunt nisi. Magnam vitae soluta hic rerum natus. Eum molestias dolorem assumenda iste dolore? Eius asperiores nesciunt repellendus mollitia nemo. Tenetur voluptas porro sit.
+          .col-sm-6
+              .panel-group#accordion2
+                .panel.panel-default
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse3") Vizualization#1 (click to hide)
+                  .pane-collapse.collapse.in#collapse3
+                    .panel-body
+                        div#viz1(style="width:100%;height:100%;")
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse4") Vizualization#2 (click to hide)
+                  .pane-collapse.collapse.in#collapse4
+                    .panel-body
+                        div#viz_pie1(style="width:100%;height:100%;")
+                        .loader#piechart_loader
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse5") Vizualization#3 (click to hide)
+                  .pane-collapse.collapse.in#collapse5
+                    .panel-body
+                        div#viz_pie2(style="width:100%;height:100%;")
+                        .loader#piechart_loader2
