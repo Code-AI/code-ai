@@ -9,7 +9,7 @@ block content
       .loader#codeforces_form_loader
       .div.hidden#username_here #{username}
       form.form-inline(method="POST",id="codeforces_form")
-        h4 You must enter your codeforces username to continue
+        h4 Enter a codeforces Username
         .alert.alert-warning#codeforces_form_alert Some error occured
         .alert.alert-success#codeforces_form_alert2 Success! You can change username from profile page
         .form-group
@@ -25,36 +25,47 @@ block content
                 .panel.panel-default
                   .panel-heading
                     .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion" href="#collapse6") Questions You should Solve next (click to hide)
+                  .pane-collapse.collapse.in#collapse6
+                    .panel-body
+                        .loader#piechart_loader5
+                        table.table.table-condensed#recommended_qs(style="max-height: 100px")
+                            hdsf
+                  .panel-heading
+                    .panel-title
                       a(data-toggle="collapse", data-parent="#accordion" href="#collapse1") Solved Questions (click to hide)
                   .pane-collapse.collapse.in#collapse1
                     .panel-body
+                        .loader#piechart_loader6
                         table.table.table-condensed#question_solved(style="max-height: 100px")
-                  .panel-heading
-                    .panel-title
-                      a(data-toggle="collapse", data-parent="#accordion" href="#collapse2") Recommended Questions (click to hide)
-                  .pane-collapse.collapse.in#collapse2
-                    .panel-body
-                      Ipsum dolorum dolor corporis deleniti repellendus deserunt nisi. Magnam vitae soluta hic rerum natus. Eum molestias dolorem assumenda iste dolore? Eius asperiores nesciunt repellendus mollitia nemo. Tenetur voluptas porro sit.
           .col-sm-6
               .panel-group#accordion2
                 .panel.panel-default
                   .panel-heading
                     .panel-title
-                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse3") Vizualization#1 (click to hide)
-                  .pane-collapse.collapse.in#collapse3
-                    .panel-body
-                        div#viz1(style="width:100%;height:100%;")
-                  .panel-heading
-                    .panel-title
-                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse4") Vizualization#2 (click to hide)
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse4") Types of question attempted (click to hide)
                   .pane-collapse.collapse.in#collapse4
                     .panel-body
                         div#viz_pie1(style="width:100%;height:100%;")
                         .loader#piechart_loader
                   .panel-heading
                     .panel-title
-                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse5") Vizualization#3 (click to hide)
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse5") Languages used for questions (click to hide)
                   .pane-collapse.collapse.in#collapse5
                     .panel-body
                         div#viz_pie2(style="width:100%;height:100%;")
                         .loader#piechart_loader2
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse7") Week days based question distribution (click to hide)
+                  .pane-collapse.collapse.in#collapse7
+                    .panel-body
+                        .loader#piechart_loader3
+                        div#viz3(style="width:100%;height:100%;")
+                  .panel-heading
+                    .panel-title
+                      a(data-toggle="collapse", data-parent="#accordion2" href="#collapse8") Day time based question distribution (click to hide)
+                  .pane-collapse.collapse.in#collapse8
+                    .panel-body
+                        .loader#piechart_loader4
+                        div#viz4(style="width:100%;height:100%;")
