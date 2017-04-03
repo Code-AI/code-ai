@@ -5,7 +5,7 @@ import json
 from collections import OrderedDict
 
 
-connect_str = "postgres://codeai:codeai@localhost:5431/codeai"
+connect_str = "postgres://codeai:codeai@localhost:5432/codeai"
 global engine
 engine = init_db_engine(connect_str)
 

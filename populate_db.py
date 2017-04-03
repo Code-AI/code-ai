@@ -20,8 +20,7 @@ languages = ['GNU C++11', 'GNU C++14', 'Java 8', 'Java 7', 'GNU C++0x', 'GNU C++
             'GNU C++11 ZIP','Java8 ZIP', 'F#']
 
 verdicts = ['OK', 'WRONG_ANSWER', 'TIME_LIMIT_EXCEEDED', 'SKIPPED', 'IDLENESS_LIMIT_EXCEEDED',
-            'COMPILATION_ERROR', 'RUNTIME_ERROR', 'CHALLENGED', 'MEMORY_LIMIT_EXCEEDED', 'PRESENTATION_ERROR',
-            'FAILED', 'CRASHED', 'PARTIAL', 'REJECTED', 'TESTING']
+            'COMPILATION_ERROR', 'RUNTIME_ERROR', 'CHALLENGED', 'MEMORY_LIMIT_EXCEEDED', 'PRESENTATION_ERROR', 'FAILED', 'CRASHED', 'PARTIAL', 'REJECTED', 'TESTING']
 
 
 proxyDict = {
@@ -30,7 +29,7 @@ proxyDict = {
     "ftp": ftp_proxy,
 }
 
-connect_str = "postgres://codeai:codeai@localhost:5431/codeai"
+connect_str = "postgres://codeai:codeai@localhost:5432/codeai"
 global engine
 engine = init_db_engine(connect_str)
 RANKLIST_URL = "http://codeforces.com/ratings/page/"
