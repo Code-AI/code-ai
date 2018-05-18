@@ -72,7 +72,7 @@ $(document).ready(function() {
             setTimeout(function() {
               console.log('WAITED FOR A MILLION YEARS');
               updateQuestionList();
-            }, 5000);
+            }, 3000);
           }
         }
       });
@@ -134,7 +134,7 @@ $(document).ready(function() {
     function queryLanguages() {
       $('#piechart_loader2').show();
       $('#viz_pie2').hide();
-      let url = 'http://192.168.43.18:5000/api/1.0/lang/'+username;
+      let url = 'http://localhost:3000/api/1.0/lang/'+username;
       //let url = 'http://codeforces.com/api/user.status?handle=Fefer_Ivan&from=1&count=10'
       console.log('URL', url);
       $.ajax({
@@ -166,7 +166,7 @@ $(document).ready(function() {
     function queryWeekDay() {
       $('#piechart_loader3').show();
       $('#viz3').hide();
-      let url = 'http://192.168.43.18:5000/api/1.0/weekday/'+username+'/OK';
+      let url = 'http://localhost:3000/api/1.0/weekday/'+username+'/OK';
       //let url = 'http://codeforces.com/api/user.status?handle=Fefer_Ivan&from=1&count=10'
       console.log('URL', url);
       $.ajax({
@@ -194,7 +194,7 @@ $(document).ready(function() {
     function queryDaytime() {
       $('#piechart_loader4').show();
       $('#viz4').hide();
-      let url = 'http://192.168.43.18:5000/api/1.0/timeday/'+username+'/OK';
+      let url = 'http://localhost:3000/api/1.0/timeday/'+username+'/OK';
       //let url = 'http://codeforces.com/api/user.status?handle=Fefer_Ivan&from=1&count=10'
       console.log('URL', url);
       $.ajax({
@@ -220,7 +220,7 @@ $(document).ready(function() {
     function queryTags() {
       $('#piechart_loader').show();
       $('#viz_pie1').hide();
-      let url = 'http://192.168.43.18:5000/api/1.0/tags/'+username+'/OK';
+      let url = 'http://localhost:3000/api/1.0/tags/'+username+'/OK';
       console.log('URL', url);
       $.ajax({
         type: 'GET',
@@ -251,7 +251,7 @@ $(document).ready(function() {
     function querySuggested() {
       $('#piechart_loader5').show();
       $('#recommended_qs').hide();
-      let url = 'http://192.168.43.18:5000/api/1.0/suggested_questions/'+username+'/CONTESTANT;PRACTICE;VIRTUAL/OK';
+      let url = 'http://localhost:3000/api/1.0/suggested_questions/'+username+'/CONTESTANT;PRACTICE;VIRTUAL/OK';
       console.log('URL', url);
       $.ajax({
         type: 'GET',
@@ -289,7 +289,7 @@ $(document).ready(function() {
       
     function querySubmissionsType() {
       let username = document.getElementById('username_here').innerText;
-      let url = 'http://192.168.43.18:5000/api/1.0/submission/'+username+'/CONTESTANT;PRACTICE;VIRTUAL/OK;';
+      let url = 'http://localhost:3000/api/1.0/submission/'+username+'/CONTESTANT;PRACTICE;VIRTUAL/OK;';
     }
     querySubmissionsType();
 

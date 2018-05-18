@@ -24,14 +24,14 @@ def user_submission(handle, type, verdict):
                    luq.relative_time,
                    luq.participant_type
               FROM l_user_question luq
-              JOIN "user" u
+              JOIN user_table u
                 ON u.id = luq.user_id
               JOIN question q
                 ON q.id = luq.question_id
               JOIN verdict
-                ON luq.verdict_id = verdict.id
+                ON luq.verdict_id = verdict.verdict_id
               JOIN language
-                ON language.id = luq.language
+                ON language.language_id = luq.language
              WHERE u.handle = :handle
                AND luq.participant_type = :participant_type
                AND verdict.name = :verdict
@@ -65,10 +65,10 @@ def people_submissions(handles, type, verdict):
               FROM l_user_question luq
               JOIN question q
                 ON q.id = luq.question_id
-              JOIN "user" u
+              JOIN "user_table" u
                 ON u.id = luq.user_id
               JOIN verdict
-                ON verdict.id = luq.verdict_id
+                ON verdict.verdict_id = luq.verdict_id
              WHERE u.handle in :handles
                AND u.handle not in :exclude_handles
                AND luq.participant_type in :participant_type
@@ -92,18 +92,18 @@ def suggested_submissions(handle, type, verdict):
         result = connection.execute(sqlalchemy.text("""
             SELECT rating,
                    id
-              FROM "user"
-              WHERE "user".handle=:handle
+              FROM "user_table"
+              WHERE "user_table".handle=:handle
         """), {
             "handle": handle,
         })
         row = dict(result.fetchone())
         results = connection.execute(sqlalchemy.text("""
             SELECT handle
-              FROM "user"
-             WHERE "user".rating > :rating
-             OFFSET  :id - 101
-             LIMIT 100
+              FROM "user_table"
+             WHERE "user_table".rating > :rating
+             OFFSET  :id
+             LIMIT 50
          """), row)
         rows = results.fetchall()
         rows = [dict(row) for row in rows]
@@ -111,7 +111,7 @@ def suggested_submissions(handle, type, verdict):
         for row in rows:
             handles.extend(row.values())
         handles = ";".join(handles)
-        handles = handles + "%{handle}".format(handle=handle)
+        handles = handles + "{handle}".format(handle=handle)
     return redirect(MY_API + 'people_submission/{handles}/{type}/{verdict}'.format(handles=handles, type=type, verdict=verdict))
 
 
@@ -122,8 +122,8 @@ def languages(handle):
             SELECT l.name
               FROM l_user_question luq
               JOIN language l
-                ON l.id = luq.language
-              JOIN "user" u
+                ON l.language_id = luq.language
+              JOIN "user_table" u
                 ON u.id = luq.user_id
              WHERE u.handle = :handle
         """), {
@@ -146,13 +146,13 @@ def tags(handle, verdict):
                 ON lqt.question = luq.question_id
               JOIN tags t
                 ON lqt.tag = t.id
-              JOIN "user"
-                ON "user".id = luq.user_id
+              JOIN "user_table"
+                ON "user_table".id = luq.user_id
               JOIN verdict
-                ON luq.verdict_id = verdict.id
-             WHERE "user".handle = :handle
+                ON luq.verdict_id = verdict.verdict_id
+             WHERE "user_table".handle = :handle
                AND verdict.name = :verdict
-          GROUP BY t.id
+          GROUP BY t.id, t.name
         """), {
             "handle": handle,
             "verdict": verdict,
@@ -168,14 +168,14 @@ def lang(handle):
     with engine.connect() as connection:
         result = connection.execute(sqlalchemy.text("""
             SELECT l.name,
-                   count(l.id)
+                   count(luq.language)
               FROM l_user_question luq
               JOIN language l
-                ON l.id = luq.language
-              JOIN "user" u
+                ON l.language_id = luq.language
+              JOIN "user_table" u
                 ON u.id = luq.user_id
              WHERE u.handle = :handle
-         GROUP BY l.id
+         GROUP BY l.language_id, l.name
         """), {
             "handle": handle,
         })
@@ -192,12 +192,12 @@ def week(handle, verdict):
             SELECT timestamp,
                    count(luq.question_id) as count
               FROM l_user_question luq
-              JOIN "user"
-                ON "user".id = luq.user_id
+              JOIN "user_table"
+                ON "user_table".id = luq.user_id
               JOIN verdict
-                ON verdict.id = luq.verdict_id
+                ON verdict.verdict_id = luq.verdict_id
              WHERE verdict.name = :verdict
-               AND "user".handle = :handle
+               AND "user_table".handle = :handle
           GROUP BY timestamp
         """), {
             "handle": handle,
@@ -224,12 +224,12 @@ def timeday(handle, verdict):
             SELECT timestamp,
                    count(luq.question_id) as count
               FROM l_user_question luq
-              JOIN "user"
-                ON "user".id = luq.user_id
+              JOIN "user_table"
+                ON "user_table".id = luq.user_id
               JOIN verdict
-                ON verdict.id = luq.verdict_id
+                ON verdict.verdict_id = luq.verdict_id
              WHERE verdict.name = :verdict
-               AND "user".handle = :handle
+               AND "user_table".handle = :handle
           GROUP BY timestamp
         """), {
             "handle": handle,
@@ -260,4 +260,4 @@ def timeday(handle, verdict):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0',port=3000, debug=True)

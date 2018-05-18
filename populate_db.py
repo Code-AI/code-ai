@@ -8,9 +8,9 @@ import threading
 import time
 
 
-http_proxy = "http://172.16.24.3:3128"
-https_proxy = "https://172.16.24.3:3128"
-ftp_proxy = "https://172.16.28.10:3128"
+http_proxy = ''#"http://172.16.24.3:3128"
+https_proxy = ''#"https://172.16.24.3:3128"
+ftp_proxy = ''#"https://172.16.28.10:3128"
 
 languages = ['GNU C++11', 'GNU C++14', 'Java 8', 'Java 7', 'GNU C++0x', 'GNU C++', 'PHP',
             'Mysterious Language', 'MS C++', 'Delphi', 'FPC', 'Secret_171', 'Tcl',
@@ -46,10 +46,10 @@ def populate_users():
         for i in range(1, 800, 4):
             username = users[i].text.split()[0]
             rating = int(users[i+2].text)
-            user_list.append(str(tuple((username, rating))))
+            user_list.append(str(tuple((str(username), int(rating)))))
         user_list = ", ".join(user_list)
         query = """
-            INSERT INTO "user"(handle, rating)
+            INSERT INTO "user_table"(handle, rating)
                  VALUES {}
         """.format(user_list)
         with engine.connect() as connection:
@@ -65,10 +65,10 @@ def populate_questions():
     probs = []
     tags = []
     for i in range(len(problems)):
-        print(i)
         problem = problems[i]
         problemstat = problem_stats[i]
-        probs.append(str(tuple((str(problem["contestId"])+problem["index"], problem["name"].replace("'", ""), int(problemstat["solvedCount"])))))
+        probs.append(str(tuple((  str(str(problem["contestId"])+problem["index"]), problem["name"].replace("'", "").encode('utf-8'), int(problemstat["solvedCount"])))))
+
 
         pr_tags = list(problem["tags"])
         prob_id = str(problem["contestId"]) + problem["index"]
@@ -78,7 +78,7 @@ def populate_questions():
         inserttag = []
         for tag in pr_tags:
             tagindex = tags.index(tag)
-            inserttag.append(str(tuple((tagindex+1, prob_id))))
+            inserttag.append(str(tuple((int(tagindex+1), str(prob_id)))))
         inserttag = ", ".join(inserttag)
         if pr_tags:
             with engine.connect() as connection:
@@ -86,7 +86,7 @@ def populate_questions():
                     INSERT INTO l_question_tag(tag, question)
                      VALUES {}
                 """.format(inserttag))
-    tags = ", ".join(["('" + tag + "')" for tag in tags])
+    tags = ", ".join([str("('" + tag + "')") for tag in tags])
     print("DONE WITH POPULATING TAGS")
     allproblems = ", ".join(probs)
 
@@ -114,7 +114,7 @@ def populate_user_questions(start, end):
     with engine.connect() as connection:
         results = connection.execute(sqlalchemy.text("""
             SELECT id, handle
-              FROM "user"
+              FROM "user_table"
         """))
         rows = results.fetchall()
         rows = [dict(row) for row in rows]
@@ -136,15 +136,17 @@ def populate_user_questions(start, end):
             db_submission = OrderedDict()
             db_submission["user_id"] = user["id"]
             db_submission["timestamp"] = datetime.fromtimestamp(submission["creationTimeSeconds"]).strftime("%c")
-            db_submission["question"] = str(submission["problem"]["contestId"]) + submission["problem"]["index"]
+            if not "contestId" in submission["problem"]:
+                continue
+            db_submission["question"] = str(str(submission["problem"]["contestId"]) + submission["problem"]["index"])
             db_submission["type"] = 'null'
             db_submission["points"] = -1
             if "type" in submission["problem"]:
-                db_submission["type"] = submission["problem"]["type"]
+                db_submission["type"] = str(submission["problem"]["type"])
             if "points" in submission["problem"]:
                 db_submission["points"] = submission["problem"]["points"]
             # Tags of a problem are already with us
-            db_submission["participantType"] = submission["author"]["participantType"]
+            db_submission["participantType"] = str(submission["author"]["participantType"])
             db_submission["relativeTimeSeconds"] = -1
             if db_submission["participantType"]:
                 if db_submission["participantType"] == "CONTESTANT":
@@ -185,33 +187,51 @@ def populate_user_questions(start, end):
 # 25001 to 28000
 # 28001 to 31000
 # 31001 to 34000
-# threads = []
+threads = []
+t = threading.Thread(target=populate_user_questions, args=(1, 2000))
+threads.append(t)
+t.start()
+t = threading.Thread(target=populate_user_questions, args=(2001, 4000))
+threads.append(t)
+t.start()
+t = threading.Thread(target=populate_user_questions, args=(4001, 6000))
+threads.append(t)
+t.start()
+t = threading.Thread(target=populate_user_questions, args=(6001, 8000))
+threads.append(t)
+t.start()
+t = threading.Thread(target=populate_user_questions, args=(8001, 9914))
+threads.append(t)
+t.start()
 
-# t = threading.Thread(target=populate_user_questions, args=(9915, 13000, 1))
+# t = threading.Thread(target=populate_user_questions, args=(9915, 13000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(13001, 16000, 2))
+# t = threading.Thread(target=populate_user_questions, args=(13001, 16000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(16001, 19000, 3))
+# t = threading.Thread(target=populate_user_questions, args=(16001, 19000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(19001, 22000, 4))
+# t = threading.Thread(target=populate_user_questions, args=(19001, 22000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(22001, 25000, 5))
+# t = threading.Thread(target=populate_user_questions, args=(22001, 25000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(25001, 28000, 6))
+# t = threading.Thread(target=populate_user_questions, args=(25001, 28000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(28001, 31000, 7))
+# t = threading.Thread(target=populate_user_questions, args=(28001, 31000))
 # threads.append(t)
 # t.start()
-# t = threading.Thread(target=populate_user_questions, args=(31001, 34000, 8))
+# t = threading.Thread(target=populate_user_questions, args=(31001, 34000))
 # threads.append(t)
 # t.start()
-populate_user_questions(13619, 35000)
+for t_ in threads:
+    t_.join()
+
+#populate_user_questions(13619, 35000)
 
 def populate_languge_and_verdicts():
 
@@ -229,6 +249,7 @@ def populate_languge_and_verdicts():
 
     verdicts = ["('" + verdict + "')" for verdict in verdicts]
     verdicts = ", ".join(verdicts)
+    #print(verdicts)
     languages = ["('" + language + "')" for language in languages]
     languages = ", ".join(languages)
     with engine.connect() as connection:
@@ -236,3 +257,8 @@ def populate_languge_and_verdicts():
             INSERT INTO language(name) VALUES {}""".format(languages)))
         connection.execute(sqlalchemy.text("""
             INSERT INTO verdict(name) VALUES {}""".format(verdicts)))
+
+#populate_users()
+#populate_questions()
+#populate_languge_and_verdicts()
+#populate_user_questions(9915, 34000)
